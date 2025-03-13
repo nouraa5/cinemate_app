@@ -1,4 +1,4 @@
-package com.example.cinemate_app
+package com.example.cinema_app
 
 import io.flutter.embedding.android.FlutterActivity
 

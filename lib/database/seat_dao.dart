@@ -1,49 +1,66 @@
 import 'package:sqflite/sqflite.dart';
 import '../models/seat.dart';
-import 'db_helper.dart';
+import '../database/db_helper.dart';
 
 class SeatDAO {
-  // Mark seats as booked
-  static Future<int> bookSeats(List<int> seatIds) async {
+  // Insert Seat
+  Future<int> insertSeat(Seat seat) async {
     final db = await DBHelper.database;
-    int count = 0;
-
-    for (int seatId in seatIds) {
-      count += await db.update(
-        'seats',
-        {'is_booked': 1},
-        where: 'id = ?',
-        whereArgs: [seatId],
-      );
-    }
-
-    return count;
+    return await db.insert('seats', seat.toMap());
   }
 
-  // Insert multiple seats for a showtime
-  static Future<void> insertSeatsForShowtime(
-      int showtimeId, List<String> seatNumbers) async {
+  Future<Seat> getSeatById(int id) async {
     final db = await DBHelper.database;
-
-    for (String seat in seatNumbers) {
-      await db.insert('seats',
-          {'showtime_id': showtimeId, 'seat_number': seat, 'is_booked': 0});
+    final List<Map<String, dynamic>> result = await db.query(
+      'seats',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (result.isNotEmpty) {
+      return Seat.fromMap(result.first);
+    } else {
+      throw Exception('Seat with id $id not found');
     }
   }
 
-  static Future<List<Seat>> getAvailableSeats(
-      int movieId, String showtime) async {
+  // Fetch all seats
+  Future<List<Seat>> getAllSeats() async {
     final db = await DBHelper.database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''
-    SELECT * FROM seats
-    WHERE id NOT IN (
-      SELECT seat_id FROM bookings
-      WHERE movie_id = ? AND showtime = ?
-    )
-  ''', [movieId, showtime]);
+    final List<Map<String, dynamic>> result = await db.query('seats');
+    return result.map((map) => Seat.fromMap(map)).toList();
+  }
 
-    return List.generate(maps.length, (i) {
-      return Seat.fromMap(maps[i]);
-    });
+  // Fetch seats for a specific showtime
+  Future<List<Map<String, dynamic>>> getSeatsByShowtime(int showtimeId) async {
+    final db = await DBHelper.database;
+    final result = await db.rawQuery('''
+      SELECT s.id, s.seat_number, s.row_number, s.column_number, ss.is_booked
+      FROM seats s
+      JOIN showtime_seats ss ON s.id = ss.seat_id
+      WHERE ss.showtime_id = ?
+    ''', [showtimeId]);
+    return result;
+  }
+
+  // Mark seat as booked
+  Future<int> bookSeat(int seatId, int showtimeId) async {
+    final db = await DBHelper.database;
+    return await db.update(
+      'showtime_seats',
+      {'is_booked': 1},
+      where: 'seat_id = ? AND showtime_id = ?',
+      whereArgs: [seatId, showtimeId],
+    );
+  }
+
+  // Unbook seat (optional, in case of cancellation)
+  Future<int> unbookSeat(int seatId, int showtimeId) async {
+    final db = await DBHelper.database;
+    return await db.update(
+      'showtime_seats',
+      {'is_booked': 0},
+      where: 'seat_id = ? AND showtime_id = ?',
+      whereArgs: [seatId, showtimeId],
+    );
   }
 }

@@ -6,7 +6,6 @@ class Movie {
   final String trailerUrl;
   final double rating;
   final List<String> actors;
-  final List<int> genreIds;
   final String releaseDate; // New field
 
   Movie({
@@ -17,7 +16,6 @@ class Movie {
     required this.trailerUrl,
     required this.rating,
     required this.actors,
-    required this.genreIds,
     required this.releaseDate, // Add this
   });
 
@@ -42,7 +40,6 @@ class Movie {
       trailerUrl: map['trailer_url'],
       rating: map['rating'],
       actors: map['actors'].split(','),
-      genreIds: [], // Will be fetched separately
       releaseDate: map['release_date'], // Add this
     );
   }

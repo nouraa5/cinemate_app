@@ -13,7 +13,7 @@ class DBHelper {
 
   // Initialize database
   static Future<Database> _initDB() async {
-    final path = join(await getDatabasesPath(), 'cinemate_booking2.db');
+    final path = join(await getDatabasesPath(), 'cinemate_bookingggg.db');
     return await openDatabase(
       path,
       version: 1,
@@ -78,10 +78,20 @@ class DBHelper {
     await db.execute('''
       CREATE TABLE seats (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        showtime_id INTEGER NOT NULL,
         seat_number TEXT NOT NULL,
+        row_number INTEGER NOT NULL,
+        column_number INTEGER NOT NULL
+      );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE showtime_seats (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        showtime_id INTEGER NOT NULL,
+        seat_id INTEGER NOT NULL,
         is_booked INTEGER DEFAULT 0,
-        FOREIGN KEY (showtime_id) REFERENCES showtimes (id) ON DELETE CASCADE
+        FOREIGN KEY (showtime_id) REFERENCES showtimes (id) ON DELETE CASCADE,
+        FOREIGN KEY (seat_id) REFERENCES seats (id) ON DELETE CASCADE
       );
     ''');
 
@@ -90,8 +100,9 @@ class DBHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         showtime_id INTEGER NOT NULL,
-        seats TEXT NOT NULL,
-        total_price REAL NOT NULL,
+        seat_ids TEXT NOT NULL,
+        total REAL NOT NULL,
+        booked_at TEXT NOT NULL,
         qr_code TEXT NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
         FOREIGN KEY (showtime_id) REFERENCES showtimes (id) ON DELETE CASCADE
@@ -105,11 +116,19 @@ class DBHelper {
   // Insert sample data into the database
   static Future<void> _insertSampleData(Database db) async {
     // Sample genres
-    await db.insert('genres', {'name': 'Action'});
-    await db.insert('genres', {'name': 'Comedy'});
-    await db.insert('genres', {'name': 'Drama'});
-    await db.insert('genres', {'name': 'Sci-Fi'});
-    await db.insert('genres', {'name': 'Thriller'});
+    List<String> genres = [
+      'Action',
+      'Comedy',
+      'Drama',
+      'Horror',
+      'Sci-Fi',
+      'Romance',
+      'Thriller'
+    ];
+
+    for (var genre in genres) {
+      await db.insert('genres', {'name': genre});
+    }
 
     // Sample movies
     await db.insert('movies', {
@@ -117,7 +136,7 @@ class DBHelper {
       'description':
           'Paul Atreides unites with Chani and the Fremen as he seeks revenge against those who destroyed his family.',
       'poster_url':
-          'https://image.tmdb.org/t/p/w500/8ZtvqZ7sO9v21LJFriC8jP3kE5Y.jpg',
+          'https://www.movieposters.com/cdn/shop/files/scan_92952849-df3d-4305-9798-5529fc91c78f_480x.progressive.jpg?v=1707837263',
       'trailer_url': 'https://www.youtube.com/watch?v=Way9Dexny3w',
       'rating': 0.0, // Upcoming
       'actors': 'Timothée Chalamet, Zendaya, Rebecca Ferguson',
@@ -128,8 +147,9 @@ class DBHelper {
       'title': 'Deadpool & Wolverine',
       'description':
           'Deadpool and Wolverine join forces in a multiverse adventure filled with humor, action, and surprises.',
-      'poster_url': 'https://image.tmdb.org/t/p/w500/your_poster_url.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=your_trailer_url',
+      'poster_url':
+          'https://www.movieposters.com/cdn/shop/files/deadpool-wolverine_ghl6lfru_480x.progressive.jpg?v=1728072513',
+      'trailer_url': 'https://www.youtube.com/watch?v=73_1biulkYk',
       'rating': 0.0, // Upcoming
       'actors': 'Ryan Reynolds, Hugh Jackman, Morena Baccarin',
       'release_date': '2025-07-26'
@@ -140,8 +160,9 @@ class DBHelper {
       'description':
           'The story of J. Robert Oppenheimer and his role in developing the atomic bomb.',
       'poster_url':
-          'https://image.tmdb.org/t/p/w500/8GVpIEBqlRBdx2Qfx7fFIM7FXuB.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=bK6ldnjE3Y0',
+          'https://www.movieposters.com/cdn/shop/files/oppenheimer_fwt2opqh_480x.progressive.jpg?v=1705953716',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=uYPbbksJxIg&pp=ygUSb3BlbmhlaW1lciB0cmFpbGVy',
       'rating': 8.6,
       'actors': 'Cillian Murphy, Robert Downey Jr., Emily Blunt',
       'release_date': '2023-07-21'
@@ -151,8 +172,10 @@ class DBHelper {
       'title': 'Godzilla x Kong: The New Empire',
       'description':
           'The mighty Kong and the fearsome Godzilla team up to face a colossal undiscovered threat lurking within our world.',
-      'poster_url': 'https://image.tmdb.org/t/p/w500/your_poster_url.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=your_trailer_url',
+      'poster_url':
+          'https://www.movieposters.com/cdn/shop/files/scan002_af1807b5-a755-42a7-9cf6-f08c0d66e2cf_480x.progressive.jpg?v=1710876259',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=lV1OOlGwExM&pp=ygUnR29kemlsbGEgeCBLb25nOiBUaGUgTmV3IEVtcGlyZSB0cmFpbGVy',
       'rating': 0.0, // Upcoming
       'actors': 'Rebecca Hall, Brian Tyree Henry, Dan Stevens',
       'release_date': '2025-03-29'
@@ -163,19 +186,22 @@ class DBHelper {
       'description':
           'Batman ventures into Gotham’s underworld when a sadistic killer leaves behind a trail of cryptic clues.',
       'poster_url':
-          'https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=mqqft2x_Aa4',
+          'https://www.movieposters.com/cdn/shop/products/the-batman_tgstxmov_480x.progressive.jpg?v=1641930817',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=mqqft2x_Aa4&pp=ygUSVGhlIEJhdG1hbiB0cmFpbGVy',
       'rating': 7.9,
       'actors': 'Robert Pattinson, Zoë Kravitz, Paul Dano',
       'release_date': '2022-03-04'
     });
 
     await db.insert('movies', {
-      'title': 'Mission: Impossible – Dead Reckoning Part Two',
+      'title': 'Mission: Impossible – Final Reckoning Part Two',
       'description':
           'Ethan Hunt embarks on another thrilling adventure full of espionage and impossible stunts.',
-      'poster_url': 'https://image.tmdb.org/t/p/w500/your_poster_url.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=your_trailer_url',
+      'poster_url':
+          'https://www.movieposters.com/cdn/shop/files/mission_impossible__the_final_reckoning_480x.progressive.jpg?v=1733261099',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=NOhDyUmT9z0&pp=ygU3TWlzc2lvbjogSW1wb3NzaWJsZSDigJMgRGVhZCBSZWNrb25pbmcgUGFydCBUd28gdHJhaWxlcg%3D%3D',
       'rating': 0.0, // Upcoming
       'actors': 'Tom Cruise, Hayley Atwell, Ving Rhames',
       'release_date': '2025-06-28'
@@ -186,8 +212,9 @@ class DBHelper {
       'description':
           'The story of Willy Wonka’s early days as a chocolate maker and his journey to becoming the greatest chocolatier.',
       'poster_url':
-          'https://image.tmdb.org/t/p/w500/fbrzO4D28JL9Agj9jzNmnTYuqak.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=otNh9bTjXWg',
+          'https://www.movieposters.com/cdn/shop/files/scan_1909c333-7137-424f-bf5d-1755ef49c574_480x.progressive.jpg?v=1701722300',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=otNh9bTjXWg&pp=ygUNd29ua2EgdHJhaWxlcg%3D%3D',
       'rating': 7.5,
       'actors': 'Timothée Chalamet, Hugh Grant, Olivia Colman',
       'release_date': '2023-12-15'
@@ -197,8 +224,10 @@ class DBHelper {
       'title': 'The Marvels',
       'description':
           'Carol Danvers, Kamala Khan, and Monica Rambeau must unite to save the universe in this cosmic adventure.',
-      'poster_url': 'https://image.tmdb.org/t/p/w500/your_poster_url.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=your_trailer_url',
+      'poster_url':
+          'https://www.movieposters.com/cdn/shop/files/the-marvels_pnk1tryd_480x.progressive.jpg?v=1692041579',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=wS_qbDztgVY&pp=ygUSVGhlIE1hcnZlbHN0cmFpbGVy',
       'rating': 6.3,
       'actors': 'Brie Larson, Iman Vellani, Teyonah Parris',
       'release_date': '2023-11-10'
@@ -209,8 +238,9 @@ class DBHelper {
       'description':
           'Jake Sully and Neytiri face new threats and explore the oceans of Pandora in this visually stunning sequel.',
       'poster_url':
-          'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=d9MyW72ELq0',
+          'https://www.movieposters.com/cdn/shop/files/avatar-the-way-of-water_zou5uxd9_480x.progressive.jpg?v=1704285772',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=d9MyW72ELq0&pp=ygUYQXZhdGFyOiBUaGUgV2F5IG9mIFdhdGVy',
       'rating': 7.6,
       'actors': 'Sam Worthington, Zoe Saldaña, Sigourney Weaver',
       'release_date': '2022-12-16'
@@ -220,11 +250,13 @@ class DBHelper {
       'title': 'Spider-Man: Beyond the Spider-Verse',
       'description':
           'Miles Morales returns in the next chapter of the Oscar-winning animated Spider-Verse saga.',
-      'poster_url': 'https://image.tmdb.org/t/p/w500/your_poster_url.jpg',
-      'trailer_url': 'https://www.youtube.com/watch?v=your_trailer_url',
-      'rating': 5.8, // Upcoming
+      'poster_url':
+          'https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn2.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcRm-NzmwrzG5Wvp-XSeTwhNo2U_vXAJAxd6gJJEq_ydqrCpXYCk&psig=AOvVaw3CEooXDeb_RMiMo5LxL5SO&ust=1740427858678000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLDToZbN2osDFQAAAAAdAAAAABAE',
+      'trailer_url':
+          'https://www.youtube.com/watch?v=D7pQ-S8QlC8&pp=ygUjU3BpZGVyLU1hbjogQmV5b25kIHRoZSBTcGlkZXItVmVyc2U%3D',
+      'rating': 0.0, // Upcoming
       'actors': 'Shameik Moore, Hailee Steinfeld, Oscar Isaac',
-      'release_date': '2024-05-02'
+      'release_date': '2025-05-02'
     });
 
     // Sample users
@@ -247,36 +279,130 @@ class DBHelper {
     });
 
     // Sample showtimes
-    await db.insert('showtimes', {
-      'movie_id': 1,
-      'date': '2025-02-20',
-      'time': '18:30',
-    });
+    final List<String> showtimes = [
+      '11:00 am',
+      '3:00 pm',
+      '7:00 pm',
+      '10:30 pm'
+    ];
+    final List<int> movieIds = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]; // Assuming you have 10 movies
 
-    await db.insert('showtimes', {
-      'movie_id': 2,
-      'date': '2025-02-21',
-      'time': '21:00',
-    });
-
-    // Sample seats
     for (int row = 1; row <= 10; row++) {
       for (int column = 1; column <= 20; column++) {
         await db.insert('seats', {
-          'showtime_id': 1,
           'seat_number': 'R${row}C${column}',
-          'is_booked': 0,
+          'row_number': row,
+          'column_number': column,
         });
       }
     }
 
-    // Sample booking
-    await db.insert('bookings', {
-      'user_id': 1,
-      'showtime_id': 1,
-      'seats': 'R1C1, R1C2',
-      'total_price': 25.0,
-      'qr_code': 'qr_code_1234',
-    });
+    // Insert showtimes and link seats
+    final List<int> seatIds =
+        List.generate(200, (index) => index + 1); // Assuming 200 seats
+    final DateTime now = DateTime.now();
+    for (int i = 0; i < 10; i++) {
+      final DateTime date = now.add(Duration(days: i));
+      final String formattedDate =
+          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+
+      for (int movieId in movieIds) {
+        for (String time in showtimes) {
+          // Insert showtime
+          final int showtimeId = await db.insert('showtimes', {
+            'movie_id': movieId,
+            'date': formattedDate,
+            'time': time,
+          });
+
+          // Link seats to showtime
+          for (int seatId in seatIds) {
+            await db.insert('showtime_seats', {
+              'showtime_id': showtimeId,
+              'seat_id': seatId,
+              'is_booked': 0,
+            });
+          }
+        }
+      }
+    }
+
+    // Mapping movies to genres
+    await db.insert('movie_genres',
+        {'movie_id': 1, 'genre_id': 1}); // Dune: Part Two - Action
+    await db.insert('movie_genres',
+        {'movie_id': 1, 'genre_id': 5}); // Dune: Part Two - Sci-Fi
+
+    await db.insert('movie_genres',
+        {'movie_id': 2, 'genre_id': 1}); // Deadpool & Wolverine - Action
+    await db.insert('movie_genres',
+        {'movie_id': 2, 'genre_id': 2}); // Deadpool & Wolverine - Comedy
+
+    await db.insert(
+        'movie_genres', {'movie_id': 3, 'genre_id': 3}); // Oppenheimer - Drama
+    await db.insert('movie_genres',
+        {'movie_id': 3, 'genre_id': 8}); // Oppenheimer - Biography
+
+    await db.insert('movie_genres', {
+      'movie_id': 4,
+      'genre_id': 1
+    }); // Godzilla x Kong: The New Empire - Action
+    await db.insert('movie_genres', {
+      'movie_id': 4,
+      'genre_id': 5
+    }); // Godzilla x Kong: The New Empire - Sci-Fi
+
+    await db.insert(
+        'movie_genres', {'movie_id': 5, 'genre_id': 1}); // The Batman - Action
+    await db.insert('movie_genres',
+        {'movie_id': 5, 'genre_id': 7}); // The Batman - Thriller
+
+    await db.insert('movie_genres', {
+      'movie_id': 6,
+      'genre_id': 1
+    }); // Mission: Impossible – Final Reckoning Part Two - Action
+    await db.insert('movie_genres', {
+      'movie_id': 6,
+      'genre_id': 7
+    }); // Mission: Impossible – Final Reckoning Part Two - Thriller
+
+    await db.insert(
+        'movie_genres', {'movie_id': 7, 'genre_id': 2}); // Wonka - Comedy
+    await db.insert(
+        'movie_genres', {'movie_id': 7, 'genre_id': 3}); // Wonka - Drama
+
+    await db.insert(
+        'movie_genres', {'movie_id': 8, 'genre_id': 1}); // The Marvels - Action
+    await db.insert(
+        'movie_genres', {'movie_id': 8, 'genre_id': 5}); // The Marvels - Sci-Fi
+
+    await db.insert('movie_genres',
+        {'movie_id': 9, 'genre_id': 5}); // Avatar: The Way of Water - Sci-Fi
+    await db.insert('movie_genres',
+        {'movie_id': 9, 'genre_id': 6}); // Avatar: The Way of Water - Adventure
+
+    await db.insert('movie_genres', {
+      'movie_id': 10,
+      'genre_id': 1
+    }); // Spider-Man: Beyond the Spider-Verse - Action
+    await db.insert('movie_genres', {
+      'movie_id': 10,
+      'genre_id': 5
+    }); // Spider-Man: Beyond the Spider-Verse - Sci-Fi
+    await db.insert('movie_genres', {
+      'movie_id': 10,
+      'genre_id': 2
+    }); // Spider-Man: Beyond the Spider-Verse - Comedy
   }
 }

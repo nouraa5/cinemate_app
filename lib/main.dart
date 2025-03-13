@@ -3,10 +3,15 @@ import 'package:provider/provider.dart';
 import 'database/db_helper.dart';
 import 'providers/user_provider.dart';
 import 'providers/movie_provider.dart';
+import 'providers/booking_provider.dart';
+import 'providers/seat_provider.dart';
+import 'providers/showtime_provider.dart'; // Add ShowtimeProvider
 import 'views/auth/login_screen.dart';
 import 'views/auth/signup_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/home/movie_details_screen.dart';
+import 'views/booking/select_showtime_screen.dart';
+import 'views/booking/select_seat_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +27,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MovieProvider()),
+        ChangeNotifierProvider(create: (_) => BookingProvider()),
+        ChangeNotifierProvider(create: (_) => SeatProvider()),
+        ChangeNotifierProvider(
+            create: (_) => ShowtimeProvider()), // ✅ Added ShowtimeProvider
       ],
       child: MaterialApp(
         title: 'Cinema Booking App',
@@ -31,14 +40,27 @@ class MyApp extends StatelessWidget {
           '/': (context) => HomeScreen(),
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignupScreen(),
-          '/movie-details': (context) =>
-              MovieDetailsScreenWrapper(), // Wrapper for passing arguments
         },
         onGenerateRoute: (settings) {
           if (settings.name == '/movie-details' && settings.arguments is int) {
             final movieId = settings.arguments as int;
             return MaterialPageRoute(
               builder: (context) => MovieDetailsScreen(movieId: movieId),
+            );
+          }
+          if (settings.name == '/select-showtime' &&
+              settings.arguments is int) {
+            final movieId = settings.arguments as int;
+            return MaterialPageRoute(
+              builder: (context) => SelectShowtimeScreen(movieId: movieId),
+            );
+          }
+          if (settings.name == '/select-seat' && settings.arguments is Map) {
+            final args = settings.arguments as Map;
+            return MaterialPageRoute(
+              builder: (context) => SelectSeatsScreen(
+                showtimeId: args['showtimeId'],
+              ),
             );
           }
           return MaterialPageRoute(
@@ -49,19 +71,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-// Wrapper to handle argument passing via named routes
-class MovieDetailsScreenWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final movieId = ModalRoute.of(context)?.settings.arguments as int?;
-    if (movieId == null) {
-      return Scaffold(
-        body: Center(child: Text('Invalid movie ID')),
-      );
-    }
-    return MovieDetailsScreen(movieId: movieId);
   }
 }

@@ -11,17 +11,21 @@ class Showtime {
     required this.time,
   });
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'movie_id': movieId,
-        'date': date,
-        'time': time,
-      };
+  factory Showtime.fromMap(Map<String, dynamic> map) {
+    return Showtime(
+      id: map['id'],
+      movieId: map['movie_id'],
+      date: map['date'],
+      time: map['time'],
+    );
+  }
 
-  factory Showtime.fromMap(Map<String, dynamic> map) => Showtime(
-        id: map['id'],
-        movieId: map['movie_id'],
-        date: map['date'],
-        time: map['time'],
-      );
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'movie_id': movieId,
+      'date': date,
+      'time': time,
+    };
+  }
 }

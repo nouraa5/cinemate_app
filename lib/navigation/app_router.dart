@@ -1,13 +1,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:cinemate_app/views/home/home_screen.dart';
-import 'package:cinemate_app/views/auth/login_screen.dart';
-import 'package:cinemate_app/views/auth/signup_screen.dart';
-import 'package:cinemate_app/views/auth/forgot_password_screen.dart';
-import 'package:cinemate_app/views/booking/select_showtime_screen.dart';
-import 'package:cinemate_app/views/booking/select_seat_screen.dart';
-import 'package:cinemate_app/views/booking/checkout_screen.dart';
-import 'package:cinemate_app/views/profile/profile_screen.dart';
+import 'package:cinema_app/views/home/home_screen.dart';
+import 'package:cinema_app/views/auth/login_screen.dart';
+import 'package:cinema_app/views/auth/signup_screen.dart';
+import 'package:cinema_app/views/auth/forgot_password_screen.dart';
+import 'package:cinema_app/views/booking/select_showtime_screen.dart';
+import 'package:cinema_app/views/booking/select_seat_screen.dart';
+import 'package:cinema_app/views/booking/checkout_screen.dart';
+import 'package:cinema_app/views/profile/profile_screen.dart';
 
 class AppRouter {
   final GoRouter router = GoRouter(

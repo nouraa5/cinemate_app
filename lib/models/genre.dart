@@ -1,11 +1,22 @@
 class Genre {
-  final int id;
-  final String name;
+  int? id;
+  String name;
 
-  Genre({required this.id, required this.name});
+  Genre({this.id, required this.name});
 
-  Map<String, dynamic> toMap() => {'id': id, 'name': name};
+  // Convert a Genre object into a Map (for database operations)
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
 
-  factory Genre.fromMap(Map<String, dynamic> map) =>
-      Genre(id: map['id'], name: map['name']);
+  // Convert a Map into a Genre object
+  factory Genre.fromMap(Map<String, dynamic> map) {
+    return Genre(
+      id: map['id'],
+      name: map['name'],
+    );
+  }
 }
