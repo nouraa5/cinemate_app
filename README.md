@@ -1,6 +1,6 @@
 # Cinema App 🎬
 
-![Under Construction](https://img.shields.io/badge/status-under_construction-yellow.svg) ![Flutter](https://img.shields.io/badge/Flutter-3.13.9-blue) ![SQLite](https://img.shields.io/badge/SQLite-3.43.0-green)
+![Under Construction](https://img.shields.io/badge/status-under_construction-yellow.svg) ![Flutter](https://img.shields.io/badge/Flutter-3.19.4-blue) ![SQLite](https://img.shields.io/badge/SQLite-2.3.3+1-green)
 
 A **Flutter-based cinema app** for discovering movies, managing showtimes, and making a booking. *Currently under construction* �
 
