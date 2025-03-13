@@ -1,16 +1,42 @@
-# cinema_app
+# Cinema App 🎬
 
-A new Flutter project.
+![Under Construction](https://img.shields.io/badge/status-under_construction-yellow.svg) ![Flutter](https://img.shields.io/badge/Flutter-3.13.9-blue) ![SQLite](https://img.shields.io/badge/SQLite-3.43.0-green)
 
-## Getting Started
+A **Flutter-based cinema app** for discovering movies, managing showtimes, and exploring theaters. Built with ❤️ (and SQLite for local data storage). *Currently under construction* �
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📝 Description  
+This app aims to provide a seamless experience for movie enthusiasts to:  
+- Browse trending and upcoming movies  
+- Explore theater locations and showtimes  
+- Save favorite movies locally (using SQLite)  
+- *More features coming soon!*  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+⚠️ **Note**: This app is **actively being developed**, and features may change or expand over time. Expect occasional breaking changes.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 🛠️ Features  
+
+### Current Features  
+- Movie catalog with details (title, genre, rating, synopsis)  
+- Local storage for favorites using **SQLite**  
+- Responsive UI for mobile devices  
+- Basic theater and showtime display  
+
+### Upcoming Features 🚧  
+- User authentication  
+- Ticket booking system  
+- Push notifications for new releases  
+- Advanced search/filters  
+- Integration with external movie APIs  
+
+---
+
+## 🚀 Installation  
+
+1. **Clone the repository**:  
+   ```bash  
+   git clone https://github.com/your-username/cinema-app.git  
+   cd cinema-app  
