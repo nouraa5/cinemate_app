@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         elevation: 0,
                       ),
                       child: const Text("Login",
-                          style: TextStyle(fontSize: 18, color: Colors.black)),
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
               const SizedBox(height: 10),
               TextButton(
@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white, fontSize: 12),
+        labelStyle: const TextStyle(color: Colors.white, fontSize: 14),
         prefixIcon: Icon(icon, color: Colors.orange),
         filled: true,
         fillColor: Colors.grey[900],
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
       ),
       obscureText: isPassword,
-      style: const TextStyle(color: Colors.white, fontSize: 14),
+      style: const TextStyle(color: Colors.white, fontSize: 16),
     );
   }
 }

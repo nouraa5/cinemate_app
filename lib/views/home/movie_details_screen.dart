@@ -192,7 +192,7 @@ class MovieDetailsScreen extends StatelessWidget {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.orange,
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 100),
+                                          vertical: 12, horizontal: 99),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),

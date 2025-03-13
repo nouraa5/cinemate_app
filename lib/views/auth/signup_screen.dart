@@ -140,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70, fontSize: 12),
+        labelStyle: const TextStyle(color: Colors.white70, fontSize: 14),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
         border: OutlineInputBorder(
@@ -152,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
       obscureText: obscureText,
       readOnly: readOnly,
-      style: const TextStyle(color: Colors.white, fontSize: 14),
+      style: const TextStyle(color: Colors.white, fontSize: 16),
       onTap: onTap,
     );
   }
@@ -187,7 +187,7 @@ class _SignupScreenState extends State<SignupScreen> {
               decoration: InputDecoration(
                 labelText: "Gender",
                 labelStyle:
-                    const TextStyle(color: Colors.white70, fontSize: 12),
+                    const TextStyle(color: Colors.white70, fontSize: 14),
                 filled: true,
                 fillColor: Colors.white.withOpacity(0.1),
                 border: OutlineInputBorder(
@@ -248,7 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: _isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text("Sign Up",
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
+                        style: TextStyle(fontSize: 16, color: Colors.black)),
               ),
             ),
           ],
