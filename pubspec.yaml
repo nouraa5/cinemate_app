@@ -42,12 +42,17 @@ dependencies:
   youtube_player_flutter: ^8.1.0
   carousel_slider: ^4.2.1
   share_plus: ^6.3.0
+  font_awesome_flutter: ^10.3.0  # Example version; use the latest
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  image_picker: ^1.1.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+  rename: ^2.0.1
   flutter_test:
     sdk: flutter
 
@@ -73,7 +78,19 @@ flutter:
   assets:
     - lib/assets/images/cinema_bg.jpg
     - lib/assets/images/logo.png
+    - lib/assets/fonts/
 
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: lib/assets/fonts/Montserrat-Regular.ttf
+        - asset: lib/assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+
+flutter_icons:
+  image_path: "lib/assets/images/logo.png"
+  android: true
+  ios: true
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -100,3 +117,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  

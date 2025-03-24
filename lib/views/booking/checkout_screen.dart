@@ -140,76 +140,89 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             ? const Center(
                 child: CircularProgressIndicator(color: Colors.orange))
             : SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 child: Card(
                   color: Colors.grey.shade900,
                   elevation: 5,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Movie Poster
                         if (_movie != null && _movie!.posterUrl.isNotEmpty)
                           Center(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
                                 _movie!.posterUrl,
-                                height: 200,
+                                height: 220,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
+                        // Movie Title
                         Center(
                           child: Text(
                             _movie != null ? _movie!.title : 'Movie Name',
                             style: const TextStyle(
-                                color: Colors.orange,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.orange,
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 20),
                         const Divider(
                           color: Colors.white70,
                           thickness: 1,
-                          height: 30,
                         ),
+                        const SizedBox(height: 10),
+                        // Booking Details
                         _buildDetailRow(
                             "Booking Reference:", "BOOKING-${_booking!.id}"),
+                        const SizedBox(height: 10),
                         _buildDetailRow(
                             "Showtime:",
                             _showtime != null
                                 ? '${_showtime!.date} ${_showtime!.time}'
                                 : 'N/A'),
+                        const SizedBox(height: 10),
                         _buildDetailRow("Seats:",
                             _seats.map((seat) => seat.seatNumber).join(', ')),
+                        const SizedBox(height: 10),
                         _buildDetailRow("Total:",
                             "\$${_booking!.total.toStringAsFixed(2)}"),
                         const SizedBox(height: 20),
+                        // QR Code
                         Center(
                           child: QrImageView(
                             data: _qrData ?? '',
                             version: QrVersions.auto,
-                            size: 200.0,
+                            size: 220,
                             backgroundColor: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        const Center(
+                        const SizedBox(height: 15),
+                        Center(
                           child: Text(
                             'Show this QR code at the cinema',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 25),
+                        // Download Button
                         Center(
                           child: ElevatedButton.icon(
                             onPressed: _downloadBookingInfo,
@@ -218,7 +231,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 20),
+                                  vertical: 14, horizontal: 28),
                               elevation: 0,
                             ),
                             icon:
@@ -242,28 +255,28 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
   }
 
   Widget _buildDetailRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

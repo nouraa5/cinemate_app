@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart'; // Add this package
 import '../../providers/user_provider.dart';
 import '../../models/user.dart';
-import 'package:intl/intl.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -22,6 +24,18 @@ class _SignupScreenState extends State<SignupScreen> {
   final List<String> _genders = ['Male', 'Female', 'Other'];
   bool _isLoading = false;
   String? _errorMessage;
+
+  File? _profileImage; // New: to hold the selected image file
+  final ImagePicker _picker = ImagePicker(); // New: image picker instance
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -108,6 +122,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    // Create a new user including the profile image path (if selected)
     User newUser = User(
       id: 0,
       name: name,
@@ -116,6 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
       password: password,
       gender: gender,
       dateOfBirth: dob,
+      profileImage: _profileImage?.path ?? '', // Save file path
     );
 
     setState(() => _isLoading = true);
@@ -166,14 +182,22 @@ class _SignupScreenState extends State<SignupScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Slightly smaller logo
-            Center(
-              child: Image.asset(
-                "lib/assets/images/logo.png",
-                width: 130,
-                height: 130,
+            // Profile image uploader
+            GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.white24,
+                backgroundImage:
+                    _profileImage != null ? FileImage(_profileImage!) : null,
+                child: _profileImage == null
+                    ? const Icon(Icons.camera_alt,
+                        size: 40, color: Colors.white70)
+                    : null,
               ),
             ),
+            const SizedBox(height: 20),
+            // Logo
             const SizedBox(height: 30),
             _buildTextField(controller: _nameController, label: "Full Name"),
             const SizedBox(height: 12),

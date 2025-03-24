@@ -5,6 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../database/movie_dao.dart';
 import '../../models/movie.dart';
 import '../../providers/user_provider.dart';
+import '../../widgets/nav_bar_scaffold.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
   final int movieId;
@@ -15,22 +16,8 @@ class MovieDetailsScreen extends StatelessWidget {
     final MovieDAO movieDao = MovieDAO();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child:
-              const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-        ),
-        title: const Text(
-          'Movie Detail',
-          style: TextStyle(fontSize: 14, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
+    return NavBarScaffold(
+      title: 'Movie Detail',
       body: FutureBuilder<Movie?>(
         future: movieDao.getMovieById(movieId),
         builder: (context, movieSnapshot) {
@@ -53,10 +40,8 @@ class MovieDetailsScreen extends StatelessWidget {
               future: movieDao.getGenresForMovie(movieId),
               builder: (context, genreSnapshot) {
                 List<String> genres = genreSnapshot.data ?? [];
-
                 return Stack(
                   children: [
-                    // Blurred Background (less blur)
                     Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
@@ -75,7 +60,6 @@ class MovieDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Trailer in Card
                           Card(
                             color: Colors.black,
                             elevation: 5,
@@ -91,7 +75,6 @@ class MovieDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          // Movie Title (slightly larger)
                           Text(
                             movie.title,
                             style: const TextStyle(
@@ -107,7 +90,6 @@ class MovieDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          // Description & Actors
                           const Text(
                             'Description',
                             style: TextStyle(
@@ -128,7 +110,6 @@ class MovieDetailsScreen extends StatelessWidget {
                                 color: Colors.white70, fontSize: 12),
                           ),
                           const SizedBox(height: 20),
-                          // Inline rating and genre with labels, icons, and vertical divider
                           if (isAvailable)
                             Row(
                               children: [
@@ -143,10 +124,9 @@ class MovieDetailsScreen extends StatelessWidget {
                                         color: Colors.white, fontSize: 12)),
                                 const SizedBox(width: 8),
                                 Container(
-                                  height: 16,
-                                  width: 1,
-                                  color: Colors.white54,
-                                ),
+                                    height: 16,
+                                    width: 1,
+                                    color: Colors.white54),
                                 const SizedBox(width: 8),
                                 Icon(Icons.videocam_rounded,
                                     color: Colors.white, size: 16),
@@ -176,7 +156,6 @@ class MovieDetailsScreen extends StatelessWidget {
                               ],
                             ),
                           const SizedBox(height: 30),
-                          // Reservation button or Coming Soon message
                           Center(
                             child: isAvailable
                                 ? ElevatedButton(
@@ -259,7 +238,6 @@ class TrailerPlayer extends StatefulWidget {
 
 class _TrailerPlayerState extends State<TrailerPlayer> {
   late YoutubePlayerController _controller;
-
   @override
   void initState() {
     super.initState();

@@ -23,6 +23,16 @@ class UserDAO {
     return null;
   }
 
+  Future<int> updateUser(User user) async {
+    final db = await DBHelper.database;
+    return await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
+
   // Get user by ID
   Future<User?> getUserById(int id) async {
     final db = await DBHelper.database;

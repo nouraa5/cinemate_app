@@ -27,5 +27,22 @@ class BookingDao {
     return result.map((map) => Booking.fromMap(map)).toList();
   }
 
-  // Add more methods if needed, e.g. update, delete, etc.
+  Future<List<Booking>> getUserBookings(int userId) async {
+    final db = await DBHelper.database;
+    final result = await db.query(
+      'bookings',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+    return result.map((map) => Booking.fromMap(map)).toList();
+  }
+
+  Future<int> deleteBooking(int bookingId) async {
+    final db = await DBHelper.database;
+    return await db.delete(
+      'bookings',
+      where: 'id = ?',
+      whereArgs: [bookingId],
+    );
+  }
 }

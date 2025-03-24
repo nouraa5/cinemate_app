@@ -9,6 +9,7 @@ class User {
   final String password; // Hashed
   final String gender;
   final String dateOfBirth;
+  final String? profileImage; // New field: path to profile image
 
   User({
     required this.id,
@@ -18,6 +19,7 @@ class User {
     required this.password,
     required this.gender,
     required this.dateOfBirth,
+    this.profileImage,
   });
 
   User copyWith({
@@ -28,6 +30,7 @@ class User {
     String? password,
     String? gender,
     String? dateOfBirth,
+    String? profileImage,
   }) {
     return User(
       id: id ?? this.id,
@@ -37,26 +40,26 @@ class User {
       password: password ?? this.password,
       gender: gender ?? this.gender,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      profileImage: profileImage ?? this.profileImage,
     );
   }
 
-  // Convert user data to a map (for database storage)
   Map<String, dynamic> toMap({bool includeId = true}) {
     final map = {
       'name': name,
       'email': email,
       'phone_number': phoneNumber,
-      'password': password, // Already hashed
+      'password': password,
       'gender': gender,
       'date_of_birth': dateOfBirth,
+      'profile_image': profileImage, // Added field
     };
     if (includeId) {
-      map['id'] = id as String;
+      map['id'] = id.toString();
     }
     return map;
   }
 
-  // Create user from database map
   factory User.fromMap(Map<String, dynamic> map) => User(
         id: map['id'],
         name: map['name'],
@@ -65,9 +68,9 @@ class User {
         password: map['password'],
         gender: map['gender'],
         dateOfBirth: map['date_of_birth'],
+        profileImage: map['profile_image'], // Added field
       );
 
-  // Hash password using SHA-256
   static String hashPassword(String password) {
     return sha256.convert(utf8.encode(password)).toString();
   }

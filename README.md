@@ -2,7 +2,7 @@
 
 ![Under Construction](https://img.shields.io/badge/status-under_construction-yellow.svg) ![Flutter](https://img.shields.io/badge/Flutter-3.19.4-blue) ![SQLite](https://img.shields.io/badge/SQLite-2.3.3+1-green)
 
-A **Flutter-based cinema app** for discovering movies, managing showtimes, and making a booking. *Currently under construction* �
+A **Flutter-based cinema app** for discovering movies, managing showtimes, and making a booking. *Currently under construction* 🎥
 
 ---
 
@@ -24,8 +24,12 @@ This app aims to provide a seamless experience for movie enthusiasts to:
 - Movie catalog with details (title, genre, rating, description)  
 - Advanced search/filters  
 - Responsive UI for mobile devices  
-- Basic showtime display
+- Basic showtime display  
 - Ticket booking system  
+- Navigation bar  
+- About Us and FAQ/Help sections  
+- View and delete a booking  
+- View and edit user profile  
   
 ---
 

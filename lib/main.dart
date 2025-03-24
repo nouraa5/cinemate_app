@@ -5,18 +5,18 @@ import 'providers/user_provider.dart';
 import 'providers/movie_provider.dart';
 import 'providers/booking_provider.dart';
 import 'providers/seat_provider.dart';
-import 'providers/showtime_provider.dart'; // Add ShowtimeProvider
+import 'providers/showtime_provider.dart';
 import 'views/auth/login_screen.dart';
 import 'views/auth/signup_screen.dart';
 import 'views/home/home_screen.dart';
 import 'views/home/movie_details_screen.dart';
 import 'views/booking/select_showtime_screen.dart';
 import 'views/booking/select_seat_screen.dart';
+import 'widgets/navigation_bar.dart'; // Ensure correct path for AppNavigation
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DBHelper.database;
-
   runApp(MyApp());
 }
 
@@ -29,15 +29,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => BookingProvider()),
         ChangeNotifierProvider(create: (_) => SeatProvider()),
-        ChangeNotifierProvider(
-            create: (_) => ShowtimeProvider()), // ✅ Added ShowtimeProvider
+        ChangeNotifierProvider(create: (_) => ShowtimeProvider()),
       ],
       child: MaterialApp(
         title: 'Cinema Booking App',
         theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(),
+          // Use AppNavigation as the shell widget for main pages
+          '/': (context) => const AppNavigation(),
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignupScreen(),
         },

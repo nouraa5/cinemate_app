@@ -66,19 +66,12 @@ class _SelectSeatsScreenState extends State<SelectSeatsScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.orange.withOpacity(0.3), Colors.transparent],
-            stops: const [0.35, 1.0],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        height: 80,
+        // Using a ClipPath with our custom ScreenClipper for a curved screen shape.
         child: ClipPath(
           clipper: ScreenClipper(),
           child: Container(
-            height: 50,
+            height: 80,
             color: Colors.orange,
           ),
         ),
@@ -87,6 +80,7 @@ class _SelectSeatsScreenState extends State<SelectSeatsScreen> {
   }
 
   Widget _buildSeatsGrid(SeatProvider seatProvider) {
+    // Build a seat map for easier lookup
     Map<String, Map<String, dynamic>> seatMap = {
       for (var seat in seatProvider.seats)
         "${seat['row_number']}-${seat['column_number']}": seat
@@ -277,9 +271,14 @@ class SeatLegend extends StatelessWidget {
 class ScreenClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height);
-    path.quadraticBezierTo(size.width / 2, -20, size.width, size.height);
+    final path = Path();
+    // Start a little below the top so the curve is more pronounced
+    path.moveTo(0, size.height * 0.2);
+    // Create a smooth curve: control point in the middle at the bottom of the container
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height * 0.2);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
     path.close();
     return path;
   }

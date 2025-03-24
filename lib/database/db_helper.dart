@@ -13,7 +13,7 @@ class DBHelper {
 
   // Initialize database
   static Future<Database> _initDB() async {
-    final path = join(await getDatabasesPath(), 'cinemate_bookingggg.db');
+    final path = join(await getDatabasesPath(), 'cinemate_bookinnnnng.db');
     return await openDatabase(
       path,
       version: 1,
@@ -24,16 +24,17 @@ class DBHelper {
   // Create tables
   static Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        phone_number TEXT NOT NULL,
-        gender TEXT NOT NULL,
-        date_of_birth TEXT NOT NULL,
-        password TEXT NOT NULL
-      );
-    ''');
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone_number TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    date_of_birth TEXT NOT NULL,
+    password TEXT NOT NULL,
+    profile_image TEXT  -- New column for storing the profile image path
+  );
+''');
 
     await db.execute('''
       CREATE TABLE movies (
@@ -260,23 +261,23 @@ class DBHelper {
     });
 
     // Sample users
-    await db.insert('users', {
-      'name': 'John Doe',
-      'email': 'john@example.com',
-      'phone_number': '1234567890',
-      'password': 'password123',
-      'gender': 'Male',
-      'date_of_birth': '1990-05-15'
-    });
+    // await db.insert('users', {
+    //   'name': 'John Doe',
+    //   'email': 'john@example.com',
+    //   'phone_number': '1234567890',
+    //   'password': 'password123',
+    //   'gender': 'Male',
+    //   'date_of_birth': '1990-05-15'
+    // });
 
-    await db.insert('users', {
-      'name': 'Jane Smith',
-      'email': 'jane@example.com',
-      'phone_number': '9876543210',
-      'password': 'password456',
-      'gender': 'Female',
-      'date_of_birth': '1988-08-22'
-    });
+    // await db.insert('users', {
+    //   'name': 'Jane Smith',
+    //   'email': 'jane@example.com',
+    //   'phone_number': '9876543210',
+    //   'password': 'password456',
+    //   'gender': 'Female',
+    //   'date_of_birth': '1988-08-22'
+    // });
 
     // Sample showtimes
     final List<String> showtimes = [

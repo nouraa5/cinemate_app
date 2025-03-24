@@ -40,4 +40,14 @@ class UserProvider extends ChangeNotifier {
     _isAuthenticated = false;
     notifyListeners();
   }
+
+  Future<bool> updateUser(User updatedUser) async {
+    final result = await _userDao.updateUser(updatedUser);
+    if (result > 0) {
+      _currentUser = updatedUser;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
 }
